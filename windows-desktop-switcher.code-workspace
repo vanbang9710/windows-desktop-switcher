@@ -11,6 +11,7 @@
 		"powershell.cwd": "e:\\GitApps\\windows-desktop-switcher",
 		"git.ignoredRepositories": [
 			"E:\\ObsidianVaults"
-		]
+		],
+		"terminal.integrated.cwd": "e:\\GitApps\\windows-desktop-switcher",
 	}
 }
