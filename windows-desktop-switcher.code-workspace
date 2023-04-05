@@ -1,0 +1,16 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"path": "../../ObsidianVaults/ObsidianVault/02_Areas/Config"
+		}
+	],
+	"settings": {
+		"powershell.cwd": "e:\\GitApps\\windows-desktop-switcher",
+		"git.ignoredRepositories": [
+			"E:\\ObsidianVaults"
+		]
+	}
+}
