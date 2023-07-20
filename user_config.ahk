@@ -62,7 +62,7 @@
 
 ; #+n::switchDesktopToRight()
 ; #+p::switchDesktopToLeft()
-#+tab::switchDesktopToRight()
+#+s::switchDesktopToRight()
 #+a::switchDesktopToLeft()
 ; #+tab::switchDesktopToLastOpened()
 
