@@ -62,8 +62,8 @@
 
 ; #+n::switchDesktopToRight()
 ; #+p::switchDesktopToLeft()
-#+s::switchDesktopToRight()
-#+a::switchDesktopToLeft()
+; #+s::switchDesktopToRight()
+; #+a::switchDesktopToLeft()
 ; #+tab::switchDesktopToLastOpened()
 
 ; #+c::createVirtualDesktop()
@@ -82,4 +82,33 @@
 ; #+Right::MoveCurrentWindowToRightDesktop()
 ; #+Left::MoveCurrentWindowToLeftDesktop()
 
+$#+a::cycleDesktop("left")
+$#+s::cycleDesktop("right")
+cycleDesktop(direction) {
+    RegRead, desktopList, HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VirtualDesktops, VirtualDesktopIDs
+    desktopList := RegExReplace(desktopList, "^0x")
+    totalDesktops := StrLen(desktopList) // 32
 
+    RegRead, currentGUID, HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VirtualDesktops, CurrentVirtualDesktop
+    currentGUID := RegExReplace(currentGUID, "^0x")
+
+    if (currentGUID != "") {
+        currentIndex := ((InStr(desktopList, currentGUID) - 1) // 32) + 1
+    } else {
+        currentIndex := 1
+    }
+
+    if (direction = "left") {
+        if (currentIndex <= 1) {
+            switchDesktopByNumber(totalDesktops)
+        } else {
+            Send, #^{Left}
+        }
+    } else if (direction = "right") {
+        if (currentIndex >= totalDesktops) {
+            switchDesktopByNumber(1)
+        } else {
+            Send, #^{Right}
+        }
+    }
+}
