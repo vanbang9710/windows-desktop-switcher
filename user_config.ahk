@@ -40,25 +40,25 @@
 ; }
 ; ; createInitialDesktops(3)
 ;1 keybind
-#+1::switchDesktopByNumber(1)
-#+2::switchDesktopByNumber(2)
-#+3::switchDesktopByNumber(3)
-#+4::switchDesktopByNumber(4)
-#+5::switchDesktopByNumber(5)
-#+6::switchDesktopByNumber(6)
-#+7::switchDesktopByNumber(7)
-#+8::switchDesktopByNumber(8)
-#+9::switchDesktopByNumber(9)
+#^1::switchDesktopByNumber(1)
+#^2::switchDesktopByNumber(2)
+#^3::switchDesktopByNumber(3)
+#^4::switchDesktopByNumber(4)
+#^5::switchDesktopByNumber(5)
+#^6::switchDesktopByNumber(6)
+#^7::switchDesktopByNumber(7)
+#^8::switchDesktopByNumber(8)
+#^9::switchDesktopByNumber(9)
 
-#+Numpad1::switchDesktopByNumber(1)
-#+Numpad2::switchDesktopByNumber(2)
-#+Numpad3::switchDesktopByNumber(3)
-#+Numpad4::switchDesktopByNumber(4)
-#+Numpad5::switchDesktopByNumber(5)
-#+Numpad6::switchDesktopByNumber(6)
-#+Numpad7::switchDesktopByNumber(7)
-#+Numpad8::switchDesktopByNumber(8)
-#+Numpad9::switchDesktopByNumber(9)
+#^Numpad1::switchDesktopByNumber(1)
+#^Numpad2::switchDesktopByNumber(2)
+#^Numpad3::switchDesktopByNumber(3)
+#^Numpad4::switchDesktopByNumber(4)
+#^Numpad5::switchDesktopByNumber(5)
+#^Numpad6::switchDesktopByNumber(6)
+#^Numpad7::switchDesktopByNumber(7)
+#^Numpad8::switchDesktopByNumber(8)
+#^Numpad9::switchDesktopByNumber(9)
 
 ; #+n::switchDesktopToRight()
 ; #+p::switchDesktopToLeft()
@@ -100,13 +100,21 @@ cycleDesktop(direction) {
 
     if (direction = "left") {
         if (currentIndex <= 1) {
-            switchDesktopByNumber(totalDesktops)
+            ; switchDesktopByNumber(totalDesktops)
+            Loop, % (totalDesktops - 1) {
+                Send, #^{Right}
+                Sleep, 50
+            }
         } else {
             Send, #^{Left}
         }
     } else if (direction = "right") {
         if (currentIndex >= totalDesktops) {
-            switchDesktopByNumber(1)
+            ; switchDesktopByNumber(1)
+            Loop, % (totalDesktops - 1) {
+                Send, #^{Left}
+                Sleep, 50
+            }
         } else {
             Send, #^{Right}
         }
