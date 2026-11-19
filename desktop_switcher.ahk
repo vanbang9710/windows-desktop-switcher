@@ -10,8 +10,30 @@ DesktopCount := 2        ; Windows starts with 2 desktops at boot
 CurrentDesktop := 1      ; Desktop count is 1-indexed (Microsoft numbers them this way)
 LastOpenedDesktop := 1
 
-; DLL
-hVirtualDesktopAccessor := DllCall("LoadLibrary", "Str", A_ScriptDir . "\VirtualDesktopAccessor.dll", "Ptr")
+; ============================================================
+; Is Windows 11
+; ============================================================
+IsWindows11() {
+    if (SubStr(A_OSVersion, 1, 3) = "10.")
+    {
+        RegExMatch(A_OSVersion, "\d+\.\d+\.(\d+)", build)
+        return (build1 >= 22000)
+    }
+    return false
+}
+
+; Select DLL based on Windows version
+if (IsWindows11()) {
+    dllPath := A_ScriptDir . "\VirtualDesktopAccessorWin11.dll"
+} else {
+    dllPath := A_ScriptDir . "\VirtualDesktopAccessorWin10.dll"
+}
+hVirtualDesktopAccessor := DllCall("LoadLibrary", "Str", dllPath, "Ptr")
+if !hVirtualDesktopAccessor {
+    MsgBox, 16, Error, Failed to load VirtualDesktopAccessor DLL.`nPath: %dllPath%
+    ExitApp
+}
+
 global IsWindowOnDesktopNumberProc := DllCall("GetProcAddress", Ptr, hVirtualDesktopAccessor, AStr, "IsWindowOnDesktopNumber", "Ptr")
 global MoveWindowToDesktopNumberProc := DllCall("GetProcAddress", Ptr, hVirtualDesktopAccessor, AStr, "MoveWindowToDesktopNumber", "Ptr")
 global GoToDesktopNumberProc := DllCall("GetProcAddress", Ptr, hVirtualDesktopAccessor, AStr, "GoToDesktopNumber", "Ptr")

@@ -85,22 +85,25 @@
 $#+a::cycleDesktop("left")
 $#+s::cycleDesktop("right")
 cycleDesktop(direction) {
-    RegRead, desktopList, HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VirtualDesktops, VirtualDesktopIDs
-    desktopList := RegExReplace(desktopList, "^0x")
-    totalDesktops := StrLen(desktopList) // 32
+    ; Use the existing, reliable function to get the current desktop and total count
+    updateGlobalVariables()
+    
+    global CurrentDesktop, DesktopCount
+    
+    currentIndex := CurrentDesktop
+    totalDesktops := DesktopCount
 
-    RegRead, currentGUID, HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VirtualDesktops, CurrentVirtualDesktop
-    currentGUID := RegExReplace(currentGUID, "^0x")
-
-    if (currentGUID != "") {
-        currentIndex := ((InStr(desktopList, currentGUID) - 1) // 32) + 1
-    } else {
+    ; If for any reason the global variables are not set, fall back to a safe default
+    if (!currentIndex) {
         currentIndex := 1
+    }
+    if (!totalDesktops) {
+        totalDesktops := 1
     }
 
     if (direction = "left") {
         if (currentIndex <= 1) {
-            ; switchDesktopByNumber(totalDesktops)
+            ; Switch to the last desktop by moving right multiple times
             Loop, % (totalDesktops - 1) {
                 Send, #^{Right}
                 Sleep, 50
@@ -110,7 +113,7 @@ cycleDesktop(direction) {
         }
     } else if (direction = "right") {
         if (currentIndex >= totalDesktops) {
-            ; switchDesktopByNumber(1)
+            ; Switch to the first desktop by moving left multiple times
             Loop, % (totalDesktops - 1) {
                 Send, #^{Left}
                 Sleep, 50
